@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>Buco Nero con Rete e Narrativa</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Share+Tech&display=swap" rel="stylesheet">
   <style>
@@ -13,6 +13,7 @@
       overflow: hidden;
       font-family: 'Share Tech', sans-serif;
       color: white;
+      touch-action: none;
     }
     
     #page-wrapper {
@@ -23,12 +24,18 @@
       transition: transform 0.03s ease-out;
     }
     
+    /* Transizione per la griglia su smartphone */
     canvas {
       position: absolute;
       top: 0;
       left: 0;
       display: block;
       z-index: 0;
+      transition: opacity 1s ease;
+    }
+    
+    canvas.canvas-hidden {
+      opacity: 0 !important;
     }
     
     .star {
@@ -81,13 +88,14 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 32px;
-      letter-spacing: -2px;
+      font-size: clamp(20px, 5vw, 32px);
+      letter-spacing: -1px;
       text-transform: uppercase;
       text-align: center;
       z-index: 10;
       opacity: 0;
       animation: fadeInOut 6s ease-in-out forwards;
+      width: 90%;
     }
     @keyframes fadeInOut {
       0% { opacity: 0; }
@@ -98,30 +106,29 @@
     
     .sequence-text {
       position: absolute;
-      padding: 20px;
-      max-width: 25vw;
+      padding: 15px;
+      width: 85vw; 
+      max-width: 450px; 
       font-family: 'Share Tech Mono', monospace;
       color: white;
       opacity: 0;
-      transition: all 0.5s ease;
+      transition: opacity 0.5s ease, color 0.5s ease, text-shadow 0.5s ease, top 0.5s ease, left 0.5s ease, transform 0.5s ease;
       z-index: 10;
-      text-shadow: 0 0 10px rgba(0, 0, 255, 0.5);
+      text-shadow: 0 0 15px rgba(0, 0, 0, 1), 0 0 5px rgba(0, 0, 255, 0.8);
       pointer-events: none;
       line-height: 1.5;
+      
+      bottom: 5%;
+      left: 5%;
+      text-align: left; /* Sempre allineato a sinistra a bandiera */
     }
     
-    .pos-bottom-left { bottom: 4%; left: 4%; text-align: left; }
-    .pos-top-right { top: 4%; right: 4%; text-align: right; }
-    .pos-top-left { top: 4%; left: 4%; text-align: left; }
-    .pos-bottom-right { bottom: 4%; right: 4%; text-align: right; }
-    
-    .pos-center {
+    .sequence-text.pos-inside {
+      bottom: auto;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      text-align: left; /* Modificato da center a left per l'allineamento a bandiera */
-      max-width: 40vw; 
-      transition: opacity 0.5s ease, color 0.5s ease, text-shadow 0.5s ease;
+      text-align: left; /* Anche quando è al centro, il testo è a bandiera a sinistra */
     }
     
     #video-container {
@@ -159,7 +166,9 @@
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 14px;
+      font-size: clamp(12px, 3vw, 14px);
+      text-align: center;
+      width: 90%;
       opacity: 0;
       animation: fadeInHint 2s ease 4s forwards;
       pointer-events: none;
@@ -173,60 +182,60 @@
 <body>
   <div id="page-wrapper">
     <div id="title">Buco nero nelle vicinanze</div>
-    <div id="scroll-hint">Scorri verso il basso per esplorare</div>
+    <div id="scroll-hint">Scorri o fai swipe per esplorare</div>
     
     <canvas id="grid"></canvas>
     
     <div id="black-hole-aura"></div>
     <div id="black-hole"></div>
     
-    <div id="sequence-text-1" class="sequence-text pos-bottom-left">
+    <div id="sequence-text-1" class="sequence-text">
       Quando una stella almeno 20 volte più massiccia del Sole finisce il suo combustibile...<br>
       Il suo nucleo collassa sotto il proprio peso.<br>
       Ciò che resta è un oggetto così denso che nemmeno la luce può sfuggirgli:<br>
       <strong>un buco nero stellare.</strong>
     </div>
     
-    <div id="sequence-text-2" class="sequence-text pos-top-right">
+    <div id="sequence-text-2" class="sequence-text">
       Non possiamo vedere un buco nero direttamente.<br>
       Emette zero luce.<br>
       Ma possiamo <strong>vedere ciò che gli succede intorno.</strong><br>
       La luce delle stelle vicine si piega. Materia che cade emette raggi X prima di sparire.
     </div>
     
-    <div id="sequence-text-3" class="sequence-text pos-top-left">
+    <div id="sequence-text-3" class="sequence-text">
       Li troviamo osservando il loro effetto sull'ambiente.<br>
       - Stelle che orbitano nel vuoto.<br>
       - Materia che si scalda mentre cade.<br>
       - Onde gravitazionali.
     </div>
     
-    <div id="sequence-text-4" class="sequence-text pos-bottom-right">
+    <div id="sequence-text-4" class="sequence-text">
       Ci stiamo avvicinando all'orizzonte degli eventi.<br>
       Qui, il tempo rallenta per chi osserva da fuori.<br>
       La luce viene tirata indietro, come se il tempo si fermasse.
     </div>
     
-    <div id="sequence-text-5" class="sequence-text pos-bottom-left">
+    <div id="sequence-text-5" class="sequence-text">
       Dal nostro punto di vista, entriamo normalmente.<br>
       Ma oltre l'orizzonte... non si può più tornare indietro.<br>
       Sei <strong>fuori dal nostro universo osservabile.</strong>
     </div>
     
-    <div id="sequence-text-6" class="sequence-text pos-top-right">
+    <div id="sequence-text-6" class="sequence-text">
       La gravità diventa estrema. Se cadi piedi per primi, i tuoi piedi sentiranno una forza molto più grande della testa.<br>
       Il risultato? <strong>Spaghettificazione.</strong><br>
       La materia si allunga, si disintegra, e infine scompare.
     </div>
     
-    <div id="sequence-text-7" class="sequence-text pos-center">
+    <div id="sequence-text-7" class="sequence-text">
       Al centro, la teoria dice che c'è una <strong>singolarità</strong><br>
       Un punto con densità infinita. Dove le leggi della fisica si spezzano.<br>
       Forse non è un punto, forse c'è qualcosa che ancora non capiamo.<br>
       Forse... una nuova fisica. Un ponte per altrove?
     </div>
     
-    <div id="sequence-text-8" class="sequence-text pos-center">
+    <div id="sequence-text-8" class="sequence-text">
       I buchi neri ci sfidano a comprendere l'universo.<br>
       Ci raccontano di stelle morte, ma anche di nascita di conoscenza.<br>
       Guardare dentro di loro è guardare oltre i limiti della scienza.<br>
@@ -258,6 +267,7 @@
     
     let scale = 1;
     let lastScale = 1; 
+    let gridHidden = false; // Flag per nascondere la griglia su mobile
     
     const zoomFactor = 1.05; 
     const dampingFactor = 0.5; 
@@ -273,7 +283,8 @@
       sequenceTexts.push(document.getElementById(`sequence-text-${i}`));
     }
     
-    const textThresholds = [
+    // Soglie per Desktop
+    const desktopThresholds = [
       { min: 0.9, max: 3.0 },     // T1
       { min: 3.0, max: 6.0 },     // T2
       { min: 6.0, max: 10.0 },    // T3
@@ -283,6 +294,22 @@
       { min: 35.0, max: 50.0 },   // T7 
       { min: 50.0, max: 80.0 }    // T8 
     ];
+
+    // Soglie per Mobile (molto più compresse per finire mentre il cerchio si allarga)
+    const mobileThresholds = [
+      { min: 0.9, max: 1.5 },     // T1
+      { min: 1.5, max: 2.5 },     // T2
+      { min: 2.5, max: 4.0 },     // T3
+      { min: 4.0, max: 5.5 },     // T4
+      { min: 5.5, max: 7.5 },     // T5
+      { min: 7.5, max: 10.0 },    // T6
+      { min: 10.0, max: 13.0 },   // T7
+      { min: 13.0, max: 18.0 }    // T8
+    ];
+    
+    function getActiveThresholds() {
+      return window.innerWidth < 600 ? mobileThresholds : desktopThresholds;
+    }
     
     const videoContainer = document.getElementById('video-container');
     const videoSlider = document.getElementById('video-slider');
@@ -315,6 +342,7 @@
     }
 
     function drawGrid(deform = 0, time = 0) {
+      if(gridHidden) return; // Ottimizzazione se la griglia non è più visibile
       ctx.clearRect(0, 0, width, height);
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'; 
       ctx.lineWidth = 1.0; 
@@ -472,25 +500,50 @@
       requestAnimationFrame(applyGlobalWiggleContinuously);
     }
 
-    window.addEventListener('wheel', (e) => {
-      if (!zoomEnabled) { e.preventDefault(); return; }
-      
-      document.getElementById('scroll-hint').style.display = 'none';
-      
-      e.preventDefault();
-      const zoomDelta = e.deltaY * dampingFactor;
-      
+    // --- GESTIONE DELLO ZOOM ---
+    function processZoom(zoomDelta) {
       if (zoomDelta > 0) scale *= 1 + ((zoomFactor - 1) * dampingFactor);
-      else scale /= 1 + ((zoomFactor - 1) * dampingFactor);
+      else if (zoomDelta < 0) scale /= 1 + ((zoomFactor - 1) * dampingFactor);
       
       scale = Math.max(1, Math.min(maxScale, scale));
       lastScale = scale; 
+      
+      // Nasconde gradualmente il canvas della rete su smartphone ai primi scroll
+      if (window.innerWidth < 600 && scale > 1.5 && !gridHidden) {
+        document.getElementById('grid').classList.add('canvas-hidden');
+        gridHidden = true;
+      }
       
       updateBlackHole(scale);
       updateStarsZoom();
       updateVideoZoom(scale);
       updateSequenceTexts(scale);
+    }
+
+    window.addEventListener('wheel', (e) => {
+      if (!zoomEnabled) { e.preventDefault(); return; }
+      document.getElementById('scroll-hint').style.display = 'none';
+      e.preventDefault();
+      processZoom(e.deltaY);
     }, { passive: false });
+
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => {
+      if (!zoomEnabled) return;
+      touchStartY = e.touches[0].clientY;
+      document.getElementById('scroll-hint').style.display = 'none';
+    }, { passive: false });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!zoomEnabled) return;
+      e.preventDefault(); 
+      const touchY = e.touches[0].clientY;
+      const deltaY = touchStartY - touchY; 
+      touchStartY = touchY; 
+      
+      processZoom(deltaY * 2); 
+    }, { passive: false });
+    // ---------------------------
 
     function updateBlackHole(scale) {
       const bh = document.getElementById('black-hole');
@@ -551,6 +604,10 @@
     
     function updateSequenceTexts(scale) {
       let detectedPhase = -1;
+      const textThresholds = getActiveThresholds();
+      
+      // Su mobile il buco nero riempie lo schermo prima, quindi inglobiamo il testo prima
+      const thresholdForInside = window.innerWidth < 600 ? 9 : 12;
 
       sequenceTexts.forEach((text, index) => {
         const threshold = textThresholds[index];
@@ -563,9 +620,17 @@
                         position > visibilityWindow * 0.9 ? 1 - (position - visibilityWindow * 0.9) / (visibilityWindow * 0.1) : 1;
           
           text.style.opacity = opacity.toString();
-          const minFontSize = 14; 
-          const maxFontSize = 24; 
+          
+          const minFontSize = window.innerWidth < 600 ? 14 : 16; 
+          const maxFontSize = window.innerWidth < 600 ? 18 : 24; 
           text.style.fontSize = `${minFontSize + (maxFontSize - minFontSize) * (position / visibilityWindow)}px`;
+
+          if (scale > thresholdForInside) {
+            text.classList.add('pos-inside');
+          } else {
+            text.classList.remove('pos-inside');
+          }
+
         } else {
           text.style.opacity = '0';
         }
@@ -584,8 +649,6 @@
     function triggerPhaseAnimation(phase) {
       const aura = document.getElementById('black-hole-aura');
       const bh = document.getElementById('black-hole');
-      const text7 = document.getElementById('sequence-text-7');
-      const text8 = document.getElementById('sequence-text-8');
       
       starSpeedMultiplier = 1;
       aura.style.background = 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 80%)';
@@ -600,19 +663,14 @@
         case 4: aura.style.background = 'radial-gradient(circle, rgba(0,0,0,0.8) 0%, transparent 80%)'; bh.style.borderColor = 'darkred'; starSpeedMultiplier = 0.5; break;
         case 5: bh.style.borderColor = '#aa00ff'; break;
         case 6: 
-          // Rimosso il flash bianco. Il buco nero resta nero con un leggero alone per distinguerlo.
           aura.style.background = 'radial-gradient(circle, rgba(50,50,255,0.1) 0%, transparent 80%)';
           bh.style.backgroundColor = 'black'; 
-          bh.style.borderColor = 'rgba(255,255,255,0.2)'; // Bordo quasi impercettibile
-          text7.style.color = 'white'; 
-          text7.style.textShadow = '0 0 10px rgba(0, 0, 255, 0.5)';
+          bh.style.borderColor = 'rgba(255,255,255,0.2)'; 
           break;
         case 7: 
           aura.style.background = 'radial-gradient(circle, rgba(50,50,255,0.2) 0%, transparent 80%)';
           bh.style.backgroundColor = 'black'; 
-          bh.style.borderColor = 'rgba(255,255,255,0.0)'; // Il bordo svanisce completamente, siamo DENTRO
-          text8.style.color = 'white'; 
-          text8.style.textShadow = '0 0 10px rgba(0, 0, 255, 0.5)';
+          bh.style.borderColor = 'rgba(255,255,255,0.0)'; 
           break;
       }
       
